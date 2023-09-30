@@ -17,13 +17,12 @@ const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.User = require('./user')(sequelize,DataTypes)
-db.Contact = require('./contact')(sequelize,DataTypes)
+db.Actor = require('./Actor')(sequelize,DataTypes)
+db.Movie = require('./Movie')(sequelize,DataTypes)
 
-db.sequelize.sync({alter:true})
+db.sequelize.sync({force:false})
 
-db.User.hasMany(db.Contact,{
-})
-db.Contact.belongsTo(db.User)
 
+db.Movie.belongsToMany(db.Actor, { through: 'ActorMovies' });
+db.Actor.belongsToMany(db.Movie, { through: 'ActorMovies' });
 module.exports = db;

@@ -4,26 +4,28 @@ const bodyParser = require('body-parser')
 const port = 3000
 
 const db = require('./models/index')
-const user = db.User
-const contact = db.Contact
+const Movie = db.Movie
+const Actor = db.Actor
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
 
-app.get('/',async(req,res)=>{
-    var data = await user.create({
-        firstname:'Ravi',
-        lastname:'Sharma'
- })
-    res.status(200).json({data:data})
-})
+// app.get('/many-to-many',async(req,res)=>{
+//      var data = await Movie.create({name:'Ra-One'})
+//      if(data && data.id){
+//         await Actor.create({name:'SRK'})
+//      }
+//      res.send('data sent')
+// })
 
-app.get('/contact',async(req,res)=>{
-    var data1 = await contact.create({
-        city:'Delhi',
-        Mobile:7656456760
- })
-    res.status(200).json({data:data1})
+app.get('/',async(req,res)=>{
+    var data = await Movie.findAll({
+        include:[{
+            model : Actor,
+            attributes : ['name']
+        }]
+    })
+    res.status(200).json({data:data})
 })
 
 app.listen(port,()=>{
